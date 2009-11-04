@@ -1,13 +1,10 @@
 # Extra settings for Ponscripter.
 
-ifdef NARCISSU2
-GAME = narci2
-FINAL_TARGET = $(if $(WIN32),Narcissu2.exe,narcissu2$(EXESUFFIX))
-PSCFLAGS := $(PSCFLAGS) -D 'DEFAULT_WM_TITLE="Narcissu Side 2nd"'
-NARCI = true
+GAME = higu
+FINAL_TARGET = $(if $(WIN32),cigales.exe,cigales$(EXESUFFIX))
 RESOURCES = resources/$(GAME).png =icon.png
 RCFILE = $(GAME).rc
-RCDEPS = $(addprefix resources/$(GAME),.gdf -boxart.png .ico)
+RCDEPS = $(addprefix resources/$(GAME),.ico)
 
 .PHONY: final
 final: ponscr$(EXESUFFIX)
@@ -15,4 +12,3 @@ final: ponscr$(EXESUFFIX)
 	-upx --best $<
 	$(RM) $(FINAL_TARGET)
 	mv $< $(FINAL_TARGET)
-endif

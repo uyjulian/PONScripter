@@ -896,7 +896,7 @@ cat > Makefile <<_EOF
 # Top-level makefile for Ponscripter
 
 .PHONY: all install install-bin uninstall pclean clean \\
-        distclean distdir dist deb rpm $MAKEDOC clean-doc
+        distclean distdir dist deb rpm $MAKEDOC clean-doc game-exe
 
 export TARGET   := ponscr$EXE
 export PREFIX   := $PREFIX
@@ -962,6 +962,9 @@ deb: distdir
 
 rpm: dist
 	rpmbuild -ta \$(DIST).tar.bz2
+
+game-exe:
+	make -C src final
 
 _EOF
 if test -n "$MAKEDOC"; then
