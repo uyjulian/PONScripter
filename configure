@@ -1057,7 +1057,7 @@ cat > Makefile <<_EOF
 .PHONY: all install install-bin uninstall pclean clean \\
         distclean distdir dist deb rpm $MAKEDOC clean-doc
 
-export TARGET   := ponscr$EXE
+export TARGET   := \$(if \$(GAME),\$(GAME),ponscr)$EXE
 export PREFIX   := $PREFIX
 export PATH     := $OURPATH\$(PATH)
 export CFLAGS   := $OURINCLUDE \$(CFLAGS)
