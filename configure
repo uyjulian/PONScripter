@@ -1008,17 +1008,17 @@ then cat >> $MAKEFILE <<_EOF
 
 RCFILE ?= ponscr.rc
 WIN_ICON ?= resources/default.ico
-RCCLEAN += \$(RCFILE)
+RCCLEAN += *.rc
 win32rc.o: \$(RCFILE) \$(RCDEPS) \$(WIN_ICON)
 	\$(WINDRES) \$< -o \$@
 
 %.rc: resources/%.rc.in version.h
 	ver=\`awk '/define VER_NUMBER/ { print $\$3 }' version.h\`; \\
 	y=\`expr substr $\$ver 1 4\`; \\
-	m=\`expr substr $\$ver 5 2 | sed s/^0// \`; \\
-	d=\`expr substr $\$ver 7 2 | sed s/^0// \`; \\
+	m=\`expr substr $\$ver 5 2\`; mn=\`expr $\$m + 0\`; \\
+	d=\`expr substr $\$ver 7 2\`; dn=\`expr $\$d + 0\`; \\
 	i=\"\$(WIN_ICON)\"; \\
-	sed -e "s/@Y@/$\$y/g;s/@M@/$\$m/g;s/@D@/$\$d/g;s%@I@%$\$i%g" \$< > \$@
+	sed -e "s/@Y@/$\$y/g;s/@0M@/$\$m/g;s/@M@/$\$mn/g;s/@0D@/$\$d/g;s/@D@/$\$dn/g;s%@I@%$\$i%g" \$< > \$@
 
 SDL_win32_main.o: SDL_win32_main.c
 	\$(CC) \$(CSTD) \$(PSCFLAGS) \$(INCS) \$(DEFS) -c \$< -o \$@
@@ -1068,7 +1068,7 @@ export CXXSTD   := $CXXSTD
 
 
 all: $DEFAULTDOC
-	\$(MAKE) -C $SRC all
+	\$(MAKE) -C $SRC all \$(if \$(GAME),GAME=\$(GAME),)
 
 install-bin: all
 	util/install-sh -c $STRIPFLAG $SRC/\$(TARGET) \$(PREFIX)/bin/\$(TARGET)
