@@ -374,8 +374,8 @@
 		E2072D1F0FDF8C14003C50C4 /* embed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2072C810FDF84ED003C50C4 /* embed.cpp */; };
 		E2072D5B0FDF9054003C50C4 /* resources.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E2072D5A0FDF9054003C50C4 /* resources.cpp */; };
 		E2072D8B0FDF9CF3003C50C4 /* jconfig.h in Headers */ = {isa = PBXBuildFile; fileRef = E2072D8A0FDF9CF3003C50C4 /* jconfig.h */; };
-		E232D3E21143A193005CD1FD /* default.icns in Resources */ = {isa = PBXBuildFile; fileRef = E232D3E11143A193005CD1FD /* default.icns */; };
 		E258AAD1110169E10014C747 /* DirPaths.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E258AACE110169E10014C747 /* DirPaths.cpp */; };
+		E2801C741363CEF3002A7DD2 /* cigales6.icns in Resources */ = {isa = PBXBuildFile; fileRef = E2801C731363CEF2002A7DD2 /* cigales6.icns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1122,6 +1122,7 @@
 		E232D3E11143A193005CD1FD /* default.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = default.icns; path = ../resources/default.icns; sourceTree = SOURCE_ROOT; };
 		E258AACE110169E10014C747 /* DirPaths.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DirPaths.cpp; path = ../DirPaths.cpp; sourceTree = SOURCE_ROOT; };
 		E258AACF110169E10014C747 /* DirPaths.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DirPaths.h; path = ../DirPaths.h; sourceTree = SOURCE_ROOT; };
+		E2801C731363CEF2002A7DD2 /* cigales6.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = cigales6.icns; path = ../resources/cigales6.icns; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1272,6 +1273,7 @@
 			isa = PBXGroup;
 			children = (
 				E232D3E11143A193005CD1FD /* default.icns */,
+				E2801C731363CEF2002A7DD2 /* cigales6.icns */,
 				8D1107310486CEB800E47090 /* Info.plist */,
 			);
 			name = Resources;
@@ -2649,7 +2651,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "PONScripter" */;
 			compatibilityVersion = "Xcode 3.0";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* ONScripter */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -2674,7 +2683,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E232D3E21143A193005CD1FD /* default.icns in Resources */,
+				E2801C741363CEF3002A7DD2 /* cigales6.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
