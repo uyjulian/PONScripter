@@ -5,8 +5,10 @@ all:
 	if test -d $(prefix); then \
 	    mkdir $(prefix)/bin; \
 	    cp -v bin/* $(prefix)/bin; \
+	    cp -v SDL.dll $(prefix)/bin; \
 	    mkdir $(prefix)/lib; \
 	    cp -v lib/* $(prefix)/lib; \
+	    mkdir $(prefix)/include; \
 	    mkdir $(prefix)/include/SDL; \
 	    cp -v include/SDL/* $(prefix)/include/SDL; \
 	    sed "s|^prefix=.*|prefix=$(prefix)|" <bin/sdl-config >$(prefix)/bin/sdl-config; \

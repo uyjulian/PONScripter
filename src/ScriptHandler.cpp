@@ -44,8 +44,8 @@ FILE* cerr = stderr;
 static bool warned_unmarked = false;
 
 ScriptHandler::ScriptHandler()
-    : variable_data(VARIABLE_RANGE + 1),
-      game_identifier()
+    : game_identifier(),
+      variable_data(VARIABLE_RANGE + 1)
 {
     for (int i = 0; i < VARIABLE_RANGE; ++i)
         variable_data[i].owner = this;
@@ -89,6 +89,7 @@ void ScriptHandler::reset()
 {
     for (int i = 0; i < VARIABLE_RANGE; i++)
         variable_data[i].reset(true);
+    extended_variable_data.clear();
 
     arrays.clear();
 
@@ -263,7 +264,8 @@ readTokenTop:
     else if (ch == file_encoding->TextMarker()) {
         ch = *++buf;
         while (ch != file_encoding->TextMarker() && ch != 0x0a && ch != '\0') {
-            if ((ch == '\\' || ch == '@') && (buf[1] == 0x0a || buf[1] == 0)) {
+            if ((ch == '\\' || ch == '@') &&
+                (textgosub_flag || buf[1] == 0x0a || buf[1] == 0)) {
                 string_buffer += *buf++;
                 ch = *buf;
                 break;
@@ -309,7 +311,7 @@ readTokenTop:
             buf += bytes;
             ch = *buf;
         }
-        if (ch == file_encoding->TextMarker()) ++buf;
+        if (ch == file_encoding->TextMarker() && !textgosub_flag) ++buf;
 
         if (ch == 0x0a && !(textgosub_flag && linepage_flag)) {
             string_buffer += ch;
@@ -346,7 +348,10 @@ readTokenTop:
         goto readTokenTop;
     }
 
-    next_script = checkComma(buf);
+    if (text_flag)
+        next_script = buf;
+    else
+        next_script = checkComma(buf);
 
     return string_buffer;
 }
@@ -658,7 +663,8 @@ void ScriptHandler::addIntVariable(const char** buf)
 void ScriptHandler::addStrVariable(const char** buf)
 {
     (*buf)++;
-    string_buffer += variable_data[parseInt(buf)].str;
+    VariableData &vd = getVariableData(parseInt(buf));
+    string_buffer += vd.str;
 }
 
 
@@ -695,10 +701,7 @@ int ScriptHandler::checkClickstr(const char* buf, bool recursive_flag)
 
 void ScriptHandler::setNumVariable(int no, int val)
 {
-    if (no < 0 || no >= VARIABLE_RANGE)
-        no = VARIABLE_RANGE;
-
-    VariableData &vd = variable_data[no];
+    VariableData &vd = getVariableData(no);
     if (vd.num_limit_flag) {
         if (val < vd.num_limit_lower) val = vd.get_num();
         else if (val > vd.num_limit_upper) val = vd.get_num();
@@ -709,7 +712,7 @@ void ScriptHandler::setNumVariable(int no, int val)
 
 
 pstring ScriptHandler::stringFromInteger(int no, int num_column,
-					 bool is_zero_inserted, bool do_wide)
+                                         bool is_zero_inserted, bool do_wide)
 {
     if (num_column < 0) num_column = 0;
 
@@ -1105,6 +1108,24 @@ void ScriptHandler::errorWarning(pstring s)
 }
 
 
+ScriptHandler::VariableData &ScriptHandler::getVariableData(int no)
+{
+    if (no >= 0 && no < VARIABLE_RANGE)
+        return variable_data[no];
+
+    for (size_t i=0 ; i<extended_variable_data.size() ; i++) {
+        if (extended_variable_data[i].no == no) 
+            return extended_variable_data[i].vd;
+    }
+    extended_variable_data.push_back(ExtendedVariableData(no));
+    //printf("SHandler.getVariableData: adding extended variable for var no %d "
+    //       "(vector size/capacity is now %d/%d\n", no, 
+    //       extended_variable_data.size(), extended_variable_data.capacity());
+
+    return extended_variable_data.back().vd;
+}
+
+
 // ----------------------------------------
 // Private methods
 
@@ -1168,9 +1189,8 @@ pstring ScriptHandler::parseStr(const char** buf)
         int no = parseInt(buf);
         current_variable.type = VAR_STR;
         current_variable.var_no = no;
-        if (no < 0 || no >= VARIABLE_RANGE)
-            current_variable.var_no = VARIABLE_RANGE;
-        return variable_data[no].str;
+
+        return getVariableData(no).str;
     }
     else if (**buf == '"') {
         (*buf)++;
@@ -1287,12 +1307,8 @@ int ScriptHandler::parseInt(const char** buf)
     if (**buf == '%') {
         (*buf)++;
         current_variable.var_no = parseInt(buf);
-        if (current_variable.var_no < 0
-            || current_variable.var_no >= VARIABLE_RANGE)
-            current_variable.var_no = VARIABLE_RANGE;
-
         current_variable.type = VAR_INT;
-        return variable_data[current_variable.var_no].get_num();
+        return getVariableData(current_variable.var_no).get_num();
     }
     else if (**buf == '?') {
 	array_ref arr = parseArray(buf);

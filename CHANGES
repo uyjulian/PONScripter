@@ -1,3 +1,15 @@
+2011-10-08
+
+  Hack to stop engine lockup at @ in text, when using textgosub [Mion]
+
+
+2011-10-06
+
+  Allow opening files with non-ASCII filenames [Mion]
+
+  Adding support for (unsaveable) variable numbers greater than 4096 [Mion]
+
+
 2010-10-23
 
   Corrected "logsp" & "logsp2" to not skip whitespace, even in
